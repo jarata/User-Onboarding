@@ -8,9 +8,7 @@ Form {
   flex-direction: column;
   /*justify-content: space-around;*/
   align-items: center;
-}
-label {
-  border: 1px solid black;
+  margin: 3%;
 }
 .error {
   color: red;

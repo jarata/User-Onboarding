@@ -1,11 +1,16 @@
-import React from 'react';
-import {withFormik, Field, Form, ErrorMessage, validateYupSchema} from "formik";
+import React, {useEffect, useState} from 'react';
+import {withFormik, Field, Form, ErrorMessage} from "formik";
 import axios from 'axios';
 import * as Yup from 'yup';
 import '../App.css';
 
-const UserForm = ({values}) => {
-	console.log("UserForm", values);
+const UserForm = ({values, isSubmitting, status}) => {
+	const [users, setUsers] = useState([]);
+	useEffect(() => {
+		console.log("status has changed", status);
+		status && setUsers(users => [...users, status])
+	}, [status]);
+	console.log("users:", users);
 	return (
 		<div>
 			<Form validationSchema={UserFormikForm.validationSchema}>
@@ -25,7 +30,9 @@ const UserForm = ({values}) => {
 				<Field id="terms" type="checkbox" name="terms" id="terms"/>
 				<ErrorMessage component="div" className="error" name="terms"/>
 				<br/>
-				<button type="submit">Submit</button>
+				<button type="submit" disabled={isSubmitting}>
+					{isSubmitting ? 'Submitting' : 'Submit'}
+				</button>
 			</Form>
 		</div>
 	)
@@ -51,15 +58,19 @@ const UserFormikForm = withFormik({
 		password: Yup.string().required("Please enter a password").min(6, "Minimum 6 characters long"),
 		terms: Yup.boolean().oneOf([true], 'Must Accept Terms of Service')
 	}),
-	handleSubmit(values, formikBag) {
-		console.log("submitting!", values);
+	handleSubmit(values, {setStatus, resetForm, setSubmitting}) {
+		console.log("submitting!", setSubmitting());
 		axios
-			.post('https://reqres.in/api/users/')
-			.then(res => console.log('success:', res))
+			.post('https://reqres.in/api/users/', values)
+			.then(res => {
+				console.log("success", res);
+				setStatus(res.data);
+				resetForm();
+			})
 			.catch(err => console.log('error:', err.response))
+			.finally(() => {setSubmitting(false)})
 	}
 })(
 	UserForm
 );
 export default UserFormikForm;
-//
