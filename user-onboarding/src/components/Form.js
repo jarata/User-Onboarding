@@ -52,7 +52,11 @@ const UserFormikForm = withFormik({
 		terms: Yup.boolean().oneOf([true], 'Must Accept Terms of Service')
 	}),
 	handleSubmit(values, formikBag) {
-		console.log("submitting!", values)
+		console.log("submitting!", values);
+		axios
+			.post('https://reqres.in/api/users/')
+			.then(res => console.log('success:', res))
+			.catch(err => console.log('error:', err.response))
 	}
 })(
 	UserForm

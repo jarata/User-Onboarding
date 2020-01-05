@@ -1,3 +1,17 @@
 .App {
   text-align: center;
 }
+Form {
+  border: 1px solid black;
+  background: darkslategray;
+  display: flex;
+  flex-direction: column;
+  /*justify-content: space-around;*/
+  align-items: center;
+}
+label {
+  border: 1px solid black;
+}
+.error {
+  color: red;
+}
